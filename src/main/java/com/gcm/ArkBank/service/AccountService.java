@@ -19,6 +19,17 @@ public class AccountService {
         contas.put(numero, new Account(numero));
     }
 
+    public void creditar(int numero, double valor) {
+        Account conta = contas.get(numero);
+        if (conta != null) {
+            conta.setBalance(conta.getBalance() + valor);
+            System.out.printf("Crédito de R$ %.2f realizado com sucesso.%n", valor);
+            System.out.printf("Novo saldo: R$ %.2f%n", conta.getBalance());
+        } else {
+            System.out.printf("Conta inválida.");
+        }
+    }
+
     private boolean exist(int numero) {
         return contas.containsKey(numero);
     }
