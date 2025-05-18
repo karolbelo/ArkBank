@@ -30,6 +30,36 @@ public class AccountService {
         }
     }
 
+    public void transferir(int origem, int destino, double valor) {
+        if (origem == destino) {
+            System.out.println("Conta de origem e destino não podem ser iguais.");
+            return;
+        }
+
+        Account contaOrigem = contas.get(origem);
+        Account contaDestino = contas.get(destino);
+
+        if (contaOrigem == null || contaDestino == null) {
+            System.out.println("Conta de origem ou destino não encontrada.");
+            return;
+        }
+
+        if (valor <= 0) {
+            System.out.println("Valor da transferência deve ser positivo.");
+            return;
+        }
+
+        if (contaOrigem.getBalance() < valor) {
+            System.out.println("Saldo insuficiente.");
+            return;
+        }
+
+        contaOrigem.setBalance(contaOrigem.getBalance() - valor);
+        contaDestino.setBalance(contaDestino.getBalance() + valor);
+
+        System.out.printf("Transferencia de R$ %.2f realizado com sucesso.%n", valor);
+    }
+
     private boolean exist(int numero) {
         return contas.containsKey(numero);
     }
