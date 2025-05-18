@@ -30,6 +30,18 @@ public class AccountService {
         }
     }
 
+    public void debitar(int numero, double valor) {
+        Account conta = contas.get(numero);
+        if (conta == null) {
+            System.out.printf("Conta inválida.");
+            return;
+        }
+
+        conta.setBalance(conta.getBalance() - valor);
+        System.out.printf("Debito de R$ %.2f realizado com sucesso.%n", valor);
+        System.out.printf("Novo saldo: R$ %.2f%n", conta.getBalance());
+    }
+
     private boolean exist(int numero) {
         return contas.containsKey(numero);
     }
