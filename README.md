@@ -71,16 +71,16 @@ Em seguida, um menu interativo será exibido continuamente com as seguintes opç
   Realiza uma operação de crédito em uma conta existente.
   O sistema pedirá o número da conta e o valor a ser creditado, e então adicionará esse valor ao saldo atual da conta.
 
-* **3 – Transferência**
+* **Opção 3 – Transferência**
   Realiza uma transferência de valor entre duas contas.
   O usuário informará o número da conta de origem, da conta de destino e o valor a ser transferido.
   O valor será debitado da conta de origem e creditado na conta de destino.
 
-* **4 – Consultar Saldo**
+* **Opção 4 – Consultar Saldo**
   Permite consultar o saldo atual de uma conta existente.
   Basta informar o número da conta.
 
-* **5 – Débito**
+* **Opção 5 – Débito**
   Subtrai um valor do saldo de uma conta existente.
   O sistema solicitará o número da conta e o valor a ser debitado.
   *Importante:* contas podem ficar com saldo negativo.
