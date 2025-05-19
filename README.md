@@ -17,7 +17,7 @@ Projeto da disciplina **DIM0517 - Gerência de Configuração e Mudanças**.
 
 Para rodar esta aplicação, você precisa de:
 
-- Java: JDK 17.
+- Java: JDK 21.
 - Git: Para clonar o repositório.
 
 ##  Configuração do Projeto
