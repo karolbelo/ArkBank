@@ -1,6 +1,8 @@
 package com.gcm.ArkBank.service;
 
 import com.gcm.ArkBank.model.Account;
+import com.gcm.ArkBank.model.AccountBonus;
+
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -9,20 +11,36 @@ import java.util.Map;
 @Service
 public class AccountService {
     private Map<Integer, Account> contas = new HashMap<>();
-
-    public void cadastrarConta(int numero) {
+    
+//Adicionado: Opção de conta do tipo bonus
+    public void cadastrarConta(int numero, boolean isBonus) {
         if (exist(numero)) {
             System.out.println("Conta já cadastrada. Tente outro número.");
             return;
         }
-        System.out.println("Conta cadastrada com sucesso.");
-        contas.put(numero, new Account(numero));
+
+        if (isBonus) {
+            contas.put(numero, new AccountBonus(numero));
+            System.out.println("Conta Bônus cadastrada com sucesso.");
+        } else {
+            contas.put(numero, new Account(numero));
+            System.out.println("Conta Comum cadastrada com sucesso.");
+        }
     }
+
 
     public void creditar(int numero, double valor) {
         Account conta = contas.get(numero);
         if (conta != null) {
             conta.setBalance(conta.getBalance() + valor);
+            
+            // Adicionado: Lógica de pontos para depósito
+            if (conta instanceof AccountBonus) {
+                int points = (int) (valor / 100);
+                ((AccountBonus) conta).adicionarPontos(points);
+                System.out.printf("Você ganhou %d pontos por este depósito.%n", points);
+            }
+            
             System.out.printf("Crédito de R$ %.2f realizado com sucesso.%n", valor);
             System.out.printf("Novo saldo: R$ %.2f%n", conta.getBalance());
         } else {
@@ -69,7 +87,27 @@ public class AccountService {
         contaOrigem.setBalance(contaOrigem.getBalance() - valor);
         contaDestino.setBalance(contaDestino.getBalance() + valor);
 
+        // Adicionado: Lógica de pontos para transferência recebida
+        if (contaDestino instanceof AccountBonus) {
+            int points = (int) (valor / 200);
+            ((AccountBonus) contaDestino).adicionarPontos(points);
+            System.out.printf("Conta destino ganhou %d pontos por esta transferência.%n", points);
+        }
+
         System.out.printf("Transferencia de R$ %.2f realizado com sucesso.%n", valor);
+    }
+    
+    public void consultarPontos(int numero) {
+        Account conta = contas.get(numero);
+        if (conta == null) {
+            System.out.printf("Conta inválida.");
+            return;
+        }
+        if (conta instanceof AccountBonus) {
+            System.out.printf("Pontos acumulados: %d%n", ((AccountBonus) conta).getPoints());
+        } else {
+            System.out.println("Esta não é uma conta bônus.");
+        }
     }
 
     private boolean exist(int numero) {
