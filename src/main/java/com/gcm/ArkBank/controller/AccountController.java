@@ -25,12 +25,14 @@ public class AccountController implements CommandLineRunner {
         System.out.println("Bem-vindo ao Banco ArkBank!");
 
         while (true) {
-            System.out.println("\n1 - Cadastrar Conta\n2 - Crédito\n5 - Débito\n0 - Sair");
+            System.out.println("\n1 - Cadastrar Conta\n2 - Crédito\n3 - Transferência\n5 - Débito\n0 - Sair");
+          
             int opcao = scanner.nextInt();
             switch (opcao) {
                 case 1 -> cadastrarConta();
                 case 2 -> creditar();
-                case 5 -> debitar();
+                case 3 -> transferir();
+                case 5 -> debitar();                
                 case 0 -> encerrarAplicacao();
                 default -> System.out.println("Opção inválida.");
             }
@@ -69,6 +71,16 @@ public class AccountController implements CommandLineRunner {
         }
 
         accountService.debitar(numero, valor);
+    }
+  
+    private void transferir() {
+        System.out.print("Conta origem: ");
+        int origem = scanner.nextInt();
+        System.out.print("Conta destino: ");
+        int destino = scanner.nextInt();
+        System.out.print("Valor: ");
+        double valor = scanner.nextDouble();
+        accountService.transferir(origem, destino, valor);
     }
 
     private void encerrarAplicacao() {
