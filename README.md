@@ -17,7 +17,7 @@ Projeto da disciplina **DIM0517 - Gerência de Configuração e Mudanças**.
 
 Para rodar esta aplicação, você precisa de:
 
-- Java: JDK 17.
+- Java: JDK 21.
 - Git: Para clonar o repositório.
 
 ##  Configuração do Projeto
@@ -56,8 +56,8 @@ Em seguida, um menu interativo será exibido continuamente com as seguintes opç
 1 - Cadastrar Conta
 2 - Crédito
 3 - Transferência
-4 - Consultar Saldo
-5 - Débito
+4 - Débito
+5 - Consultar Saldo
 0 - Sair
 ```
 
@@ -76,14 +76,15 @@ Em seguida, um menu interativo será exibido continuamente com as seguintes opç
   O usuário informará o número da conta de origem, da conta de destino e o valor a ser transferido.
   O valor será debitado da conta de origem e creditado na conta de destino.
 
-* **Opção 4 – Consultar Saldo**
-  Permite consultar o saldo atual de uma conta existente.
-  Basta informar o número da conta.
-
-* **Opção 5 – Débito**
+* **Opção 4 – Débito**
   Subtrai um valor do saldo de uma conta existente.
   O sistema solicitará o número da conta e o valor a ser debitado.
   *Importante:* contas podem ficar com saldo negativo.
+
+* **Opção 5 – Consultar Saldo**
+  Permite consultar o saldo atual de uma conta existente.
+  Basta informar o número da conta.
+
 
 * **Opção 0 – Sair**
   Encerra a execução da aplicação de forma segura, exibindo uma mensagem de despedida.
