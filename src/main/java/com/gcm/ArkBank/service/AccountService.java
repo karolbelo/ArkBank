@@ -75,4 +75,12 @@ public class AccountService {
     private boolean exist(int numero) {
         return contas.containsKey(numero);
     }
+    public void checarSaldoConta(int numeroConta){
+        Account conta = contas.get(numeroConta);
+        if (conta == null) {
+            System.out.printf("Conta inválida.");
+            return;
+        }
+        System.out.printf("Saldo em conta: R$ %.2f%n", conta.getBalance());
+    }
 }
