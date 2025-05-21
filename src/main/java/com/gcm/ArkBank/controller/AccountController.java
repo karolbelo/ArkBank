@@ -45,12 +45,21 @@ public class AccountController implements CommandLineRunner {
             }
         }
     }
-
+//Adicionado: Opção da conta do tipo bonus
     private void cadastrarConta() {
         System.out.print("Número da conta: ");
         int numero = scanner.nextInt();
-        accountService.cadastrarConta(numero);
+
+        System.out.println("Escolha o tipo de conta:");
+        System.out.println("1 - Conta Simples");
+        System.out.println("2 - Conta Bônus");
+        System.out.print("Opção: ");
+        int tipoConta = scanner.nextInt();
+
+        boolean isBonus = (tipoConta == 2);
+        accountService.cadastrarConta(numero, isBonus);
     }
+
 
     private void creditar() {
         System.out.print("Número da conta: ");
@@ -94,6 +103,7 @@ public class AccountController implements CommandLineRunner {
         System.out.print("Número da conta: ");
         int numero = scanner.nextInt();
         accountService.checarSaldoConta(numero);
+        
     }
 
     private void encerrarAplicacao() {
