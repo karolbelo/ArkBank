@@ -3,6 +3,7 @@ package com.gcm.ArkBank.service;
 import com.gcm.ArkBank.model.Account;
 import com.gcm.ArkBank.model.AccountBonus;
 
+import com.gcm.ArkBank.model.AccountSaving;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,18 +14,27 @@ public class AccountService {
     private Map<Integer, Account> contas = new HashMap<>();
     
 //Adicionado: Opção de conta do tipo bonus
-    public void cadastrarConta(int numero, boolean isBonus) {
+    public void cadastrarConta(int numero, int tipoConta) {
         if (exist(numero)) {
             System.out.println("Conta já cadastrada. Tente outro número.");
             return;
         }
-
-        if (isBonus) {
-            contas.put(numero, new AccountBonus(numero));
-            System.out.println("Conta Bônus cadastrada com sucesso.");
-        } else {
-            contas.put(numero, new Account(numero));
-            System.out.println("Conta Comum cadastrada com sucesso.");
+        switch (tipoConta){
+            case 1 -> {
+                contas.put(numero, new Account(numero));
+                System.out.println("Conta Comum cadastrada com sucesso.");
+            }
+            case 2-> {
+                contas.put(numero, new AccountBonus(numero));
+                System.out.println("Conta Bônus cadastrada com sucesso.");
+            }
+            case 3->{
+                contas.put(numero, new AccountSaving(numero));
+                System.out.println("Conta Poupança cadastrada com sucesso.");
+            }
+            default -> {
+                System.out.println("Tipo de conta inválido");
+            }
         }
     }
 
@@ -120,5 +130,15 @@ public class AccountService {
             return;
         }
         System.out.printf("Saldo em conta: R$ %.2f%n", conta.getBalance());
+    }
+    public void calcularJuros(int numeroConta, double taxaJuros){
+        Account conta = contas.get(numeroConta);
+        if (conta instanceof AccountSaving){
+            double novoSaldo = conta.getBalance()*(taxaJuros/100);
+            conta.setBalance(conta.getBalance()+novoSaldo);
+            System.out.printf("Saldo em conta: R$ %.2f%n", conta.getBalance());
+        }else{
+            System.out.println("Conta não encontrada");
+        }
     }
 }

@@ -31,6 +31,7 @@ public class AccountController implements CommandLineRunner {
                     "\n3 - Transferência" +
                     "\n4 - Débito " +
                     "\n5 - Checar Saldo" +
+                    "\n6 - Render Juros(Apenas contas do tipo poupança)" +
                     "\n0 - Sair");
           
             int opcao = scanner.nextInt();
@@ -40,6 +41,7 @@ public class AccountController implements CommandLineRunner {
                 case 3 -> transferir();
                 case 4 -> debitar();
                 case 5 -> checarSaldo();
+                case 6 -> renderJuros();
                 case 0 -> encerrarAplicacao();
                 default -> System.out.println("Opção inválida.");
             }
@@ -53,11 +55,12 @@ public class AccountController implements CommandLineRunner {
         System.out.println("Escolha o tipo de conta:");
         System.out.println("1 - Conta Simples");
         System.out.println("2 - Conta Bônus");
+        System.out.println("3 - Conta Poupança");
+
         System.out.print("Opção: ");
         int tipoConta = scanner.nextInt();
 
-        boolean isBonus = (tipoConta == 2);
-        accountService.cadastrarConta(numero, isBonus);
+        accountService.cadastrarConta(numero, tipoConta);
     }
 
 
@@ -110,5 +113,12 @@ public class AccountController implements CommandLineRunner {
         System.out.println("Encerrando.");
         int exitCode = SpringApplication.exit(context, () -> 0);
         System.exit(exitCode);
+    }
+    private void renderJuros(){
+        System.out.println("Número da conta");
+        int numConta = scanner.nextInt();
+        System.out.println("Quantia de juros por mês em %");
+        double porcentagem = scanner.nextDouble();
+        accountService.calcularJuros(numConta,porcentagem);
     }
 }
