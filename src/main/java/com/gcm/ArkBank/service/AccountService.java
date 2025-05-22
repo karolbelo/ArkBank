@@ -39,11 +39,17 @@ public class AccountService {
 	}
 
 	public void creditar(int numero, double valor) {
+		// Validação para valores negativos (nova implementação para rc-1.3.0)
+		if (valor <= 0) {
+			System.out.println("Erro: Valor do crédito deve ser positivo.");
+			return;
+		}
+
 		Account conta = contas.get(numero);
 		if (conta != null) {
 			conta.setBalance(conta.getBalance() + valor);
 
-			// Adicionado: Lógica de pontos para depósito
+			// Lógica de pontos para depósito
 			if (conta instanceof AccountBonus) {
 				int points = (int) (valor / 100);
 				((AccountBonus) conta).adicionarPontos(points);
@@ -53,7 +59,7 @@ public class AccountService {
 			System.out.printf("Crédito de R$ %.2f realizado com sucesso.%n", valor);
 			System.out.printf("Novo saldo: R$ %.2f%n", conta.getBalance());
 		} else {
-			System.out.printf("Conta inválida.");
+			System.out.println("Erro: Conta inválida.");
 		}
 	}
 
@@ -64,7 +70,7 @@ public class AccountService {
 			return;
 		}
 
-		// Adicionado: Verificação de valor positivo
+		// Adicionado: Verificação de valor positivo (nova implementação para rc-1.3.0)
 		if (valor <= 0) {
 			System.out.println("Valor do débito deve ser positivo.");
 			return;
@@ -94,6 +100,7 @@ public class AccountService {
 			return;
 		}
 
+		// (nova implementação para rc-1.3.0)
 		if (valor <= 0) {
 			System.out.println("Valor da transferência deve ser positivo.");
 			return;
