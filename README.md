@@ -19,6 +19,7 @@ Para rodar esta aplicação, você precisa de:
 
 - Java: JDK 21.
 - Git: Para clonar o repositório.
+- Maven
 
 ##  Configuração do Projeto
 
@@ -58,6 +59,7 @@ Em seguida, um menu interativo será exibido continuamente com as seguintes opç
 3 - Transferência
 4 - Débito
 5 - Consultar Saldo
+6 - Render Juros
 0 - Sair
 ```
 
@@ -84,7 +86,9 @@ Em seguida, um menu interativo será exibido continuamente com as seguintes opç
 * **Opção 5 – Consultar Saldo**
   Permite consultar o saldo atual de uma conta existente.
   Basta informar o número da conta.
-
+  
+* **Opção 6 – Render Juros**
+  Permite ao usuário informar uma taxa de juros e aplica o rendimento em **todas as contas poupança** cadastradas.  
 
 * **Opção 0 – Sair**
   Encerra a execução da aplicação de forma segura, exibindo uma mensagem de despedida.
