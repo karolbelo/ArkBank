@@ -8,11 +8,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 @Service
 public class AccountService {
 	private Map<Integer, Account> contas = new HashMap<>();
+	Scanner scanner = new Scanner(System.in);
 
+	public boolean checarSaldoNegativo(int numConta, double valorOperacao){
+		Account contaChecar = contas.get(numConta);
+		if ((contaChecar instanceof Account || contaChecar instanceof AccountBonus) && contaChecar.getBalance() - valorOperacao <= -1000) {
+			System.out.println("Operação cancelada, limite de R$ -1000,00 de saldo negativo atingido");
+			return false;
+		}
+		return true;
+	}
+	public boolean checarConta(int numConta){
+		if (!contas.containsKey(numConta)) {
+			System.out.printf("Conta inválida.");
+			return false;
+		}
+		return true;
+	}
 //Adicionado: Opção de conta do tipo bonus
 	public void cadastrarConta(int numero, int tipoConta) {
 		if (exist(numero)) {
@@ -29,8 +46,11 @@ public class AccountService {
 			System.out.println("Conta Bônus cadastrada com sucesso.");
 		}
 		case 3 -> {
-			contas.put(numero, new AccountSaving(numero));
+			System.out.println("Digite o saldo inicial da conta");
+			double saldoInicial = scanner.nextDouble();
+			contas.put(numero, new AccountSaving(numero, saldoInicial));
 			System.out.println("Conta Poupança cadastrada com sucesso.");
+			System.out.printf("saldo inicial %.2f :.%n", saldoInicial);
 		}
 		default -> {
 			System.out.println("Tipo de conta inválido");
@@ -65,8 +85,7 @@ public class AccountService {
 
 	public void debitar(int numero, double valor) {
 		Account conta = contas.get(numero);
-		if (conta == null) {
-			System.out.printf("Conta inválida.");
+		if (!checarConta(numero)){
 			return;
 		}
 
@@ -76,8 +95,7 @@ public class AccountService {
 			return;
 		}
 		// Adicionado: Verificação de saldo suficiente
-		if (conta.getBalance() < valor) {
-			System.out.println("Saldo insuficiente para realizar o débito.");
+		if (!checarSaldoNegativo(conta.getNumber(),valor)){
 			return;
 		}
 
@@ -91,23 +109,21 @@ public class AccountService {
 			System.out.println("Conta de origem e destino não podem ser iguais.");
 			return;
 		}
-
-		Account contaOrigem = contas.get(origem);
-		Account contaDestino = contas.get(destino);
-
-		if (contaOrigem == null || contaDestino == null) {
+		if ((!checarConta(origem) )|| (!checarConta(destino))) {
 			System.out.println("Conta de origem ou destino não encontrada.");
 			return;
 		}
+		Account contaOrigem = contas.get(origem);
+		Account contaDestino = contas.get(destino);
+
 
 		// (nova implementação para rc-1.3.0)
 		if (valor <= 0) {
 			System.out.println("Valor da transferência deve ser positivo.");
 			return;
 		}
-//Adicionado: Ajuste na mensagem de erro
-		if (contaOrigem.getBalance() < valor) {
-			System.out.println("Saldo insuficiente para realizar a transferência.");
+		//Adicionado: Ajuste na mensagem de erro
+		if (!checarSaldoNegativo(contaOrigem.getNumber(),valor)){
 			return;
 		}
 
@@ -126,8 +142,7 @@ public class AccountService {
 
 	public void consultarPontos(int numero) {
 		Account conta = contas.get(numero);
-		if (conta == null) {
-			System.out.printf("Conta inválida.");
+		if (!checarConta(numero)){
 			return;
 		}
 		if (conta instanceof AccountBonus) {
@@ -143,8 +158,7 @@ public class AccountService {
 
 	public void checarSaldoConta(int numeroConta) {
 		Account conta = contas.get(numeroConta);
-		if (conta == null) {
-			System.out.printf("Conta inválida.");
+		if (!checarConta(numeroConta)){
 			return;
 		}
 		System.out.printf("Saldo em conta: R$ %.2f%n", conta.getBalance());
