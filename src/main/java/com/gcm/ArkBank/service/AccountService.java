@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 @Service
 public class AccountService {
 	private Map<Integer, Account> contas = new HashMap<>();
+	Scanner scanner = new Scanner(System.in);
 
 	public boolean checarSaldoNegativo(int numConta, double valorOperacao){
 		Account contaChecar = contas.get(numConta);
@@ -21,6 +23,7 @@ public class AccountService {
 		}
 		return true;
 	}
+
 	public boolean checarConta(int numConta){
 		if (!contas.containsKey(numConta)) {
 			System.out.printf("Conta inválida.");
@@ -44,8 +47,11 @@ public class AccountService {
 			System.out.println("Conta Bônus cadastrada com sucesso.");
 		}
 		case 3 -> {
-			contas.put(numero, new AccountSaving(numero));
+			System.out.println("Digite o saldo inicial da conta");
+			double saldoInicial = scanner.nextDouble();
+			contas.put(numero, new AccountSaving(numero, saldoInicial));
 			System.out.println("Conta Poupança cadastrada com sucesso.");
+			System.out.printf("saldo inicial %.2f :.%n", saldoInicial);
 		}
 		default -> {
 			System.out.println("Tipo de conta inválido");
@@ -64,6 +70,9 @@ public class AccountService {
 		if (!checarConta(numero)){
 			return;
 		}
+
+    conta.setBalance(conta.getBalance() + valor);
+
 			// Lógica de pontos para depósito
 			if (conta instanceof AccountBonus) {
 				int points = (int) (valor / 100);
