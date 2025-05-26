@@ -97,8 +97,7 @@ public class AccountService {
 			return;
 		}
 		// Adicionado: Verificação de saldo suficiente
-		if (conta.getBalance() < valor) {
-			System.out.println("Saldo insuficiente para realizar o débito.");
+		if (!checarSaldoNegativo(conta.getNumber(),valor)){
 			return;
 		}
 
@@ -126,7 +125,6 @@ public class AccountService {
 			System.out.println("Valor da transferência deve ser positivo.");
 			return;
 		}
-		//Adicionado: Ajuste na mensagem de erro
 		if (!checarSaldoNegativo(contaOrigem.getNumber(),valor)){
 			return;
 		}
