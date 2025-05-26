@@ -15,6 +15,15 @@ public class AccountService {
 	private Map<Integer, Account> contas = new HashMap<>();
 	Scanner scanner = new Scanner(System.in);
 
+	public boolean checarSaldoNegativo(int numConta, double valorOperacao){
+		Account contaChecar = contas.get(numConta);
+		if ((contaChecar instanceof Account || contaChecar instanceof AccountBonus) && contaChecar.getBalance() - valorOperacao <= -1000) {
+			System.out.println("Operação cancelada, limite de R$ -1000,00 de saldo negativo atingido");
+			return false;
+		}
+		return true;
+	}
+
 	public boolean checarConta(int numConta){
 		if (!contas.containsKey(numConta)) {
 			System.out.printf("Conta inválida.");
@@ -61,7 +70,8 @@ public class AccountService {
 		if (!checarConta(numero)){
 			return;
 		}
-			conta.setBalance(conta.getBalance() + valor);
+
+    conta.setBalance(conta.getBalance() + valor);
 
 			// Lógica de pontos para depósito
 			if (conta instanceof AccountBonus) {
@@ -72,6 +82,7 @@ public class AccountService {
 
 			System.out.printf("Crédito de R$ %.2f realizado com sucesso.%n", valor);
 			System.out.printf("Novo saldo: R$ %.2f%n", conta.getBalance());
+
 	}
 
 	public void debitar(int numero, double valor) {
@@ -86,8 +97,7 @@ public class AccountService {
 			return;
 		}
 		// Adicionado: Verificação de saldo suficiente
-		if (conta.getBalance() < valor) {
-			System.out.println("Saldo insuficiente para realizar o débito.");
+		if (!checarSaldoNegativo(conta.getNumber(),valor)){
 			return;
 		}
 
@@ -115,9 +125,7 @@ public class AccountService {
 			System.out.println("Valor da transferência deve ser positivo.");
 			return;
 		}
-//Adicionado: Ajuste na mensagem de erro
-		if (contaOrigem.getBalance() < valor) {
-			System.out.println("Saldo insuficiente para realizar a transferência.");
+		if (!checarSaldoNegativo(contaOrigem.getNumber(),valor)){
 			return;
 		}
 
