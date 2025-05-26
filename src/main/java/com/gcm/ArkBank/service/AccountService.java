@@ -8,11 +8,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 @Service
 public class AccountService {
 	private Map<Integer, Account> contas = new HashMap<>();
+	Scanner scanner = new Scanner(System.in);
 
+	public boolean checarConta(int numConta){
+		if (!contas.containsKey(numConta)) {
+			System.out.printf("Conta inválida.");
+			return false;
+		}
+		return true;
+	}
 //Adicionado: Opção de conta do tipo bonus
 	public void cadastrarConta(int numero, int tipoConta) {
 		if (exist(numero)) {
@@ -29,8 +38,11 @@ public class AccountService {
 			System.out.println("Conta Bônus cadastrada com sucesso.");
 		}
 		case 3 -> {
-			contas.put(numero, new AccountSaving(numero));
+			System.out.println("Digite o saldo inicial da conta");
+			double saldoInicial = scanner.nextDouble();
+			contas.put(numero, new AccountSaving(numero, saldoInicial));
 			System.out.println("Conta Poupança cadastrada com sucesso.");
+			System.out.printf("saldo inicial %.2f :.%n", saldoInicial);
 		}
 		default -> {
 			System.out.println("Tipo de conta inválido");
@@ -46,7 +58,9 @@ public class AccountService {
 		}
 
 		Account conta = contas.get(numero);
-		if (conta != null) {
+		if (!checarConta(numero)){
+			return;
+		}
 			conta.setBalance(conta.getBalance() + valor);
 
 			// Lógica de pontos para depósito
@@ -58,15 +72,11 @@ public class AccountService {
 
 			System.out.printf("Crédito de R$ %.2f realizado com sucesso.%n", valor);
 			System.out.printf("Novo saldo: R$ %.2f%n", conta.getBalance());
-		} else {
-			System.out.println("Erro: Conta inválida.");
-		}
 	}
 
 	public void debitar(int numero, double valor) {
 		Account conta = contas.get(numero);
-		if (conta == null) {
-			System.out.printf("Conta inválida.");
+		if (!checarConta(numero)){
 			return;
 		}
 
@@ -95,7 +105,7 @@ public class AccountService {
 		Account contaOrigem = contas.get(origem);
 		Account contaDestino = contas.get(destino);
 
-		if (contaOrigem == null || contaDestino == null) {
+		if ((!checarConta(origem) )|| (!checarConta(destino))) {
 			System.out.println("Conta de origem ou destino não encontrada.");
 			return;
 		}
@@ -126,8 +136,7 @@ public class AccountService {
 
 	public void consultarPontos(int numero) {
 		Account conta = contas.get(numero);
-		if (conta == null) {
-			System.out.printf("Conta inválida.");
+		if (!checarConta(numero)){
 			return;
 		}
 		if (conta instanceof AccountBonus) {
@@ -143,8 +152,7 @@ public class AccountService {
 
 	public void checarSaldoConta(int numeroConta) {
 		Account conta = contas.get(numeroConta);
-		if (conta == null) {
-			System.out.printf("Conta inválida.");
+		if (!checarConta(numeroConta)){
 			return;
 		}
 		System.out.printf("Saldo em conta: R$ %.2f%n", conta.getBalance());
