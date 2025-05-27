@@ -83,6 +83,7 @@ public class AccountService {
 			System.out.printf("Crédito de R$ %.2f realizado com sucesso.%n", valor);
 			System.out.printf("Novo saldo: R$ %.2f%n", conta.getBalance());
 
+		}
 	}
 
 	public void debitar(int numero, double valor) {
