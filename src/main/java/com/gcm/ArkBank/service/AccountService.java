@@ -134,7 +134,7 @@ public class AccountService {
 
 		// Adicionado: Lógica de pontos para transferência recebida
 		if (contaDestino instanceof AccountBonus) {
-			int points = (int) (valor / 200);
+			int points = (int) (valor / 150);
 			((AccountBonus) contaDestino).adicionarPontos(points);
 			System.out.printf("Conta destino ganhou %d pontos por esta transferência.%n", points);
 		}
