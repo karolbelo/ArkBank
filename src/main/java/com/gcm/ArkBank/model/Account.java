@@ -17,4 +17,9 @@ public class Account {
         this.number = number;
         this.balance = balance;
     }
+
+    public Account(int number, double balance) {
+        this.number = number;
+        this.balance = balance;
+    }
 }

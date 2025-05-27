@@ -7,7 +7,8 @@ import lombok.Setter;
 @Setter
 //saldo inicial é apenas temporário, no bugfix vai voltar a ser um atributo herdado
 public class AccountSaving extends Account{
-    public AccountSaving(int number, double saldoInicial) {
-        super(number, saldoInicial);
+  
+    public AccountSaving(int number, double initialBalance) {
+        super(number, initialBalance);
     }
 }
