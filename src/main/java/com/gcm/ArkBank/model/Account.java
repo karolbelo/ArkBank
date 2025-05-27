@@ -10,8 +10,12 @@ public class Account {
     private double balance;
 
     public Account(int number) {
+        this(number, 0.0);
+    }
+
+    public Account(int number, double balance) {
         this.number = number;
-        this.balance = 0.0;
+        this.balance = balance;
     }
 
     public Account(int number, double balance) {
