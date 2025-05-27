@@ -14,22 +14,22 @@ public class AccountService {
 	private Map<Integer, Account> contas = new HashMap<>();
 
 //Adicionado: Opção de conta do tipo bonus
-	public void cadastrarConta(int numero, int tipoConta) {
+	public void cadastrarConta(int numero, int tipoConta, double saldoInicial) {
 		if (exist(numero)) {
 			System.out.println("Conta já cadastrada. Tente outro número.");
 			return;
 		}
 		switch (tipoConta) {
 		case 1 -> {
-			contas.put(numero, new Account(numero));
+			contas.put(numero, new Account(numero, saldoInicial));
 			System.out.println("Conta Comum cadastrada com sucesso.");
 		}
 		case 2 -> {
-			contas.put(numero, new AccountBonus(numero));
+			contas.put(numero, new AccountBonus(numero, saldoInicial));
 			System.out.println("Conta Bônus cadastrada com sucesso.");
 		}
 		case 3 -> {
-			contas.put(numero, new AccountSaving(numero));
+			contas.put(numero, new AccountSaving(numero, saldoInicial));
 			System.out.println("Conta Poupança cadastrada com sucesso.");
 		}
 		default -> {

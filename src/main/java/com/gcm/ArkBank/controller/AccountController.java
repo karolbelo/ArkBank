@@ -55,7 +55,13 @@ public class AccountController implements CommandLineRunner {
 		System.out.print("Opção: ");
 		int tipoConta = scanner.nextInt();
 
-		accountService.cadastrarConta(numero, tipoConta);
+		double saldoInicial = 0.0;
+		if (tipoConta == 1) {
+			System.out.print("Insira o saldo inicial: R$ ");
+			saldoInicial = scanner.nextDouble();
+		}
+
+		accountService.cadastrarConta(numero, tipoConta, saldoInicial);
 	}
 
 	private void creditar() {
