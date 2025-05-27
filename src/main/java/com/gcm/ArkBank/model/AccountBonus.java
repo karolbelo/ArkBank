@@ -8,8 +8,8 @@ import lombok.Setter;
 public class AccountBonus extends Account {
     private int points;
 
-    public AccountBonus(int number) {
-        super(number);      
+     public AccountBonus(int number, double initialBalance) {
+        super(number, initialBalance);      
         this.points = 10;    // Conta bônus começa com 10 pontos
     }
 
