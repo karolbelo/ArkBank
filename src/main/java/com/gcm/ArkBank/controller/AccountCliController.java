@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Scanner;
 
@@ -21,8 +22,12 @@ public class AccountCliController implements CommandLineRunner {
 		this.context = context;
 	}
 
-	@Override
-	public void run(String... args) {
+	@Value("${cli.enabled:true}")
+    private boolean cliEnabled;
+
+    @Override
+    public void run(String... args) throws Exception {
+        if (!cliEnabled) return;
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Bem-vindo ao Banco ArkBank!");
 
