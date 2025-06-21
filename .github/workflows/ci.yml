@@ -37,20 +37,20 @@ jobs:
       - name: Build Docker image (sem push)
         run: docker build -t arkbank-ci .
 
-tag-release:
-    name: Create Git Tag
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+  tag-release:
+      name: Create Git Tag
+      needs: build
+      runs-on: ubuntu-latest
+      permissions:
+        contents: write
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
 
-      - name: Create and Push Git Tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag build-${{ github.run_number }}
-          git push origin build-${{ github.run_number }}
+        - name: Create and Push Git Tag
+          run: |
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag build-${{ github.run_number }}
+            git push origin build-${{ github.run_number }}
