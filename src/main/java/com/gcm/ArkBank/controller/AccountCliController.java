@@ -1,5 +1,7 @@
 package com.gcm.ArkBank.controller;
 
+import com.gcm.ArkBank.model.Account;
+import com.gcm.ArkBank.model.AccountBonus;
 import com.gcm.ArkBank.service.AccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,12 +11,12 @@ import org.springframework.stereotype.Component;
 import java.util.Scanner;
 
 @Component
-public class AccountController implements CommandLineRunner {
+public class AccountCliController implements CommandLineRunner {
 	private final AccountService accountService;
 	private final ApplicationContext context;
 	Scanner scanner = new Scanner(System.in);
 
-	public AccountController(AccountService accountService, ApplicationContext context) {
+	public AccountCliController(AccountService accountService, ApplicationContext context) {
 		this.accountService = accountService;
 		this.context = context;
 	}
@@ -26,23 +28,40 @@ public class AccountController implements CommandLineRunner {
 
 		while (true) {
 			System.out.println("" + "\n1 - Cadastrar Conta" + "\n2 - Crédito" + "\n3 - Transferência" + "\n4 - Débito "
-					+ "\n5 - Checar Saldo" + "\n6 - Render Juros(Apenas contas do tipo poupança)" + "\n0 - Sair");
+					+ "\n5 - Checar Saldo" + "\n6 - Render Juros(Apenas contas do tipo poupança)" + "\n7 - Consultar Conta" + "\n0 - Sair");
 
 			int opcao = scanner.nextInt();
 			switch (opcao) {
-			case 1 -> cadastrarConta();
-			case 2 -> creditar();
-			case 3 -> transferir();
-			case 4 -> debitar();
-			case 5 -> checarSaldo();
-			case 6 -> renderJuros();
-			case 0 -> encerrarAplicacao();
-			default -> System.out.println("Opção inválida.");
+				case 1 -> cadastrarConta();
+				case 2 -> creditar();
+				case 3 -> transferir();
+				case 4 -> debitar();
+				case 5 -> checarSaldo();
+				case 6 -> renderJuros();
+				case 7 -> consultarConta();
+				case 0 -> encerrarAplicacao();
+				default -> System.out.println("Opção inválida.");
 			}
 		}
 	}
 
-//Adicionado: Opção da conta do tipo bonus
+	private void consultarConta() {
+		System.out.print("Número da conta: ");
+		int numero = scanner.nextInt();
+		try {
+			Account account = accountService.getAccount(numero);
+			System.out.println("Dados da conta:");
+			System.out.println("Número: " + account.getNumber());
+			System.out.println("Tipo: " + account.getClass().getSimpleName());
+			System.out.println("Saldo: " + account.getBalance());
+			if (account instanceof AccountBonus) {
+				System.out.println("Bônus: " + ((AccountBonus) account).getPoints());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
 	private void cadastrarConta() {
 		System.out.print("Número da conta: ");
 		int numero = scanner.nextInt();
@@ -56,12 +75,17 @@ public class AccountController implements CommandLineRunner {
 		int tipoConta = scanner.nextInt();
 
 		double saldoInicial = 0.0;
-		if (tipoConta == 1) {
+		if (tipoConta == 1 || tipoConta == 2 || tipoConta == 3) {
 			System.out.print("Insira o saldo inicial: R$ ");
 			saldoInicial = scanner.nextDouble();
 		}
 
-		accountService.cadastrarConta(numero, tipoConta, saldoInicial);
+		try {
+			accountService.cadastrarConta(numero, tipoConta, saldoInicial);
+			System.out.println("Conta cadastrada com sucesso!");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	private void creditar() {
@@ -70,12 +94,12 @@ public class AccountController implements CommandLineRunner {
 		System.out.print("Valor: ");
 		double valor = scanner.nextDouble();
 
-		if (valor <= 0) {
-			System.out.println("Valor deve ser positivo.");
-			return;
+		try {
+			accountService.creditar(numero, valor);
+			System.out.println("Crédito realizado com sucesso!");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
-
-		accountService.creditar(numero, valor);
 	}
 
 	private void debitar() {
@@ -84,12 +108,12 @@ public class AccountController implements CommandLineRunner {
 		System.out.print("Valor: ");
 		double valor = scanner.nextDouble();
 
-		if (valor <= 0) {
-			System.out.println("Valor deve ser positivo.");
-			return;
+		try {
+			accountService.debitar(numero, valor);
+			System.out.println("Débito realizado com sucesso!");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
-
-		accountService.debitar(numero, valor);
 	}
 
 	private void transferir() {
@@ -99,14 +123,23 @@ public class AccountController implements CommandLineRunner {
 		int destino = scanner.nextInt();
 		System.out.print("Valor: ");
 		double valor = scanner.nextDouble();
-		accountService.transferir(origem, destino, valor);
+		try {
+			accountService.transferir(origem, destino, valor);
+			System.out.println("Transferência realizada com sucesso!");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	private void checarSaldo() {
 		System.out.print("Número da conta: ");
 		int numero = scanner.nextInt();
-		accountService.checarSaldoConta(numero);
-
+		try {
+			double saldo = accountService.getSaldo(numero);
+			System.out.printf("Saldo em conta: R$ %.2f%n", saldo);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	private void encerrarAplicacao() {
@@ -116,10 +149,13 @@ public class AccountController implements CommandLineRunner {
 	}
 
 	private void renderJuros() {
-		System.out.println("Número da conta");
-		int numConta = scanner.nextInt();
 		System.out.println("Quantia de juros por mês em %");
 		double porcentagem = scanner.nextDouble();
-		accountService.calcularJuros(numConta, porcentagem);
+		try {
+			accountService.renderJuros(porcentagem);
+			System.out.println("Juros rendidos com sucesso!");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }
