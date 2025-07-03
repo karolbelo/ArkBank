@@ -1,0 +1,10 @@
+target/
+.git/
+.idea/
+.gitignore
+HELP.md
+README.md
+mvnw
+mvnw.cmd
+pom.xml.old
+src/test/ 

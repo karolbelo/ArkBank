@@ -1,0 +1,68 @@
+name: CI Staging Pipeline
+
+on:
+  push:
+    branches:
+      - staging
+
+permissions:
+  contents: write
+
+jobs:
+  build-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Instalar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+
+      - name: Resolver dependências
+        run: mvn dependency:go-offline
+
+      - name: Compilar aplicação
+        run: mvn compile
+
+      - name: Executar análise estática (PMD)
+        run: mvn pmd:pmd
+
+      - name: Executar testes
+        run: mvn test
+
+      - name: Calcular próxima tag rc-X.Y
+        id: tag
+        run: |
+          TAGS=$(git tag -l "rc-*" | sed 's/rc-//' | sort -V)
+          if [ -z "$TAGS" ]; then
+            VERSION="0.1"
+          else
+            LAST=$(echo "$TAGS" | tail -n1)
+            X=$(echo $LAST | cut -d. -f1)
+            Y=$(echo $LAST | cut -d. -f2)
+            Y=$((Y+1))
+            VERSION="$X.$Y"
+          fi
+          TAG="rc-$VERSION"
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
+      - name: Gerar pacote zip
+        run: |
+          mvn package -DskipTests
+          zip -j ${{ env.TAG }}.zip target/*.jar
+
+      - name: Publicar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.TAG }}.zip
+          path: ${{ env.TAG }}.zip
+
+      - name: Criar e enviar tag rc-X.Y
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG
+          git push origin $TAG 
