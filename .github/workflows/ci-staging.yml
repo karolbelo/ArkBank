@@ -36,6 +36,7 @@ jobs:
       - name: Calcular próxima tag rc-X.Y
         id: tag
         run: |
+          git fetch --tags
           TAGS=$(git tag -l "rc-*" | sed 's/rc-//' | sort -V)
           if [ -z "$TAGS" ]; then
             VERSION="0.1"
