@@ -15,6 +15,9 @@ Projeto da disciplina **DIM0517 - Gerência de Configuração e Mudanças**.
 
 ## Variáveis de Ambiente
 
+##Link para o DockherHub
+https://hub.docker.com/repository/docker/alvaroprudencio/ark-bank/tags/rel-3.0/sha256-b4b7c802a50e96d4ac507266f24b6a013c52f45e664ad6baeca1bce84dabb6a6
+
 Para rodar esta aplicação, você precisa de:
 
 - Java: JDK 21.
@@ -95,4 +98,47 @@ Em seguida, um menu interativo será exibido continuamente com as seguintes opç
 
 * **Qualquer outro número digitado** será interpretado como **opção inválida**, e o menu será exibido novamente.
 
+##Como usar os end-points
+
+Execute o comando abaixo para iniciar o container:
+
+```bash
+docker run -p 8080:8080 alvaroprudencio/ark-bank:latest
+```
+Acesse a porta 8080
+```bash
+http://localhost:8080/
+```
+Caso dê algum erro, tente usar o curl, mas a lógica de uso é a mesma
+
+Listar todas as contas
+```bash
+curl http://localhost:8080/banco/conta/
+```
+Obter uma conta pelo ID, caso deseje constultar o saldo basta adicionar "/saldo" no final
+```bash
+curl http://localhost:8080/banco/conta/1
+```
+Creditar conta, debito funciona da mesma forma, apenas mudando credito pra debito
+```bash
+curl -X PUT http://localhost:8080/banco/conta/1/credito \
+  -H "Content-Type: application/json" \
+  -d '{ "valor": 500.0 }'
+```
+Transferência entre duas contas
+```bash
+curl -X PUT http://localhost:8080/banco/conta/transferencia \
+  -H "Content-Type: application/json" \
+  -d '{
+    "from": 1,
+    "to": 2,
+    "amount": 150.0
+  }'
+```
+Rendimento de uma conta
+```bash
+curl -X PUT http://localhost:8080/banco/conta/rendimento \
+  -H "Content-Type: application/json" \
+  -d '{ "taxaJuros": 0.05 }'
+```
 ---
