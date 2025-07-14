@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AccountBonus extends Account {
+public class AccountBonus extends Acount {
     private int points;
 
      public AccountBonus(int number, double initialBalance) {
