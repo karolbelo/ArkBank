@@ -58,7 +58,7 @@ public class AccountService {
 
 		Account conta = getAccount(numero);
 
-		//conta.setBalance(conta.getBalance() + valor);
+		conta.setBalance(conta.getBalance() + valor);
 
 		if (conta instanceof AccountBonus) {
 			int points = (int) (valor / 100);
