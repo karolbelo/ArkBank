@@ -1,16 +1,16 @@
 package com.gcm.ArkBank.service;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import com.gcm.ArkBank.exceptions.AccountNotFoundException;
 import com.gcm.ArkBank.exceptions.InvalidOperationException;
 import com.gcm.ArkBank.model.Account;
 import com.gcm.ArkBank.model.AccountBonus;
-
 import com.gcm.ArkBank.model.AccountSaving;
-import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AccountService {
@@ -74,8 +74,8 @@ public class AccountService {
 			throw new InvalidOperationException("Valor do débito deve ser positivo.");
 		}
 
-		if ((conta instanceof Account || conta instanceof AccountBonus) && conta.getBalance() - valor <= -1000) {
-			throw new InvalidOperationException("Operação cancelada, limite de R$ -1000,00 de saldo negativo atingido");
+		if ((conta instanceof Account || conta instanceof AccountBonus) && conta.getBalance() - valor <= -2000) {
+			throw new InvalidOperationException("Operação cancelada, limite de R$ -2000,00 de saldo negativo atingido");
 		}
 
 		conta.setBalance(conta.getBalance() - valor);
